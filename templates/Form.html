@@ -1,0 +1,54 @@
+{{define "Form"}}
+{{template "_head"}}
+{{template "_menu"}}
+<body>
+    <div class="container">
+        <div>
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                    <h1 class="display-5">Novo produto</h1>
+                    <p class="lead">Insira os detalhes</p>
+                </div>
+            </div>
+            <form method="POST" action="insert">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <label for="name">Nome:</label>
+                            <input type="text" name="name" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <label for="description">Descrição:</label>
+                            <input type="text" name="description" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label for="price">Preço:</label>
+                            <input type="number" name="price" class="form-control" step="0.01">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label for="availableQuantity">Quantidade:</label>
+                            <input type="number" name="availableQuantity" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" value="salvar" class="btn btn-success">Salvar</button>
+                <a class="btn btn-info" href="/">Voltar</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+{{end}}
