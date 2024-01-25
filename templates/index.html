@@ -40,12 +40,31 @@
 </body>
 
 <script>
-  function onDelete(id){
-    let resp = confirm("Deseja deletar esse produto?")
-    if (resp){
-      window.location = `/delete?id=${id}`
+  function doRequest(url, options){
+    fetch(url, options).
+    then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        window.location.href = `/`;
+    })
+    .catch(error => {
+        alert("Falha ao deletar produto!")
+        console.error('failed to do request:', error);
+    });
+}
+
+function onDelete(productId) {
+    if (!confirm("Deseja deletar esse produto?")){
+      return
     }
-  }
+    
+    const requestOptionsDeleteProduct = {method: "DELETE", headers: {'Content-Type': 'application/json'}}
+    const url = `a/delete?id=${productId}`
+
+    doRequest(url,requestOptionsDeleteProduct)
+}
 </script>
 </html>
 {{end}}
