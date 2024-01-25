@@ -1,7 +1,7 @@
 package models
 
 import (
-	"log"
+	"log/slog"
 	"strconv"
 
 	"github.com/14-web_api/data"
@@ -22,7 +22,7 @@ func GetAllProducts() []Product {
 
 	query, err := db.Query("SELECT * FROM products ORDER BY name ASC")
 	if err != nil {
-		log.Println("failed to get products: ", err)
+		slog.Error("failed to get products: ", err)
 		return []Product{}
 	}
 
@@ -36,7 +36,7 @@ func GetAllProducts() []Product {
 		// its parameters must be in the same order as the entity fields
 		err := query.Scan(&id, &name, &price, &description, &availableQuantity)
 		if err != nil {
-			log.Println("failed to scan products: ", err)
+			slog.Error("failed to scan products: ", err)
 			return []Product{}
 		}
 
@@ -57,12 +57,14 @@ func InsertProduct(p Product) {
 	`)
 
 	if err != nil {
-		panic(err.Error())
+		slog.Error("failed to prepare query", err)
+		return
 	}
 
 	_, err = queryInsert.Exec(p.Name, p.Description, p.Price, p.AvailableQuantity)
 	if err != nil {
-		log.Println("failed to insert product: ", err)
+		slog.Error("failed to insert product", err)
+		return
 	}
 
 }
@@ -75,39 +77,39 @@ func DeleteProduct(id string) {
 		DELETE FROM products WHERE id=$1
 	`)
 	if err != nil {
-		log.Println("failed to prepare query to delete product: ", err)
+		slog.Error("failed to prepare query to delete product", err)
 		return
 	}
 
 	uid, err := strconv.Atoi(id)
 	if err != nil {
-		log.Println("failed to delete product, id is not valid: ", err)
+		slog.Error("failed to delete product, id is not valid", err)
 		return
 	}
 
 	_, err = query.Exec(uid)
 
 	if err != nil {
-		log.Println("failed to delete product: ", err)
+		slog.Error("failed to delete product", err)
 		return
 	}
 
-	log.Println("product deleted! id ", uid)
+	slog.Debug("product deleted", slog.Int("productId", uid))
 }
 
 func GetProduct(id string) Product {
 	db := data.ConnectDb()
 	defer db.Close()
 
-	intID, err := strconv.Atoi(string(id))
+	productId, err := strconv.Atoi(id)
 	if err != nil {
-		log.Println("failed to convert string id to integer: " + err.Error())
+		slog.Error("failed to convert string id to integer", err)
 		return Product{}
 	}
 
-	query, err := db.Query(`SELECT * FROM products WHERE id=$1`, intID)
+	query, err := db.Query(`SELECT * FROM products WHERE id=$1`, productId)
 	if err != nil {
-		log.Println("failed to get product by id: " + err.Error())
+		slog.Error("failed to get product by id", err, slog.Int("productId", productId))
 		return Product{}
 	}
 
@@ -117,7 +119,7 @@ func GetProduct(id string) Product {
 		// its parameters must be in the same order as the entity fields
 		err := query.Scan(&p.Id, &p.Name, &p.Price, &p.Description, &p.AvailableQuantity)
 		if err != nil {
-			log.Println("failed to scan when get product by id: ", err)
+			slog.Error("failed to scan when get product by id", err, slog.Int("productId", productId))
 			return Product{}
 		}
 	}
@@ -129,22 +131,20 @@ func UpdateProduct(p Product) {
 	db := data.ConnectDb()
 	defer db.Close()
 
-	// product := GetProduct(string(p.Id))
-
 	query, err := db.Prepare(`
 		UPDATE products SET 
 		name=$1, price=$2, description=$3, available_quantity=$4
 		WHERE id=$5
 	`)
 	if err != nil {
-		log.Println("failed to prepare query to update product: ", err)
+		slog.Error("failed to prepare query to update product", err, slog.Any("product", p))
 		return
 	}
 
 	_, err = query.Exec(p.Name, p.Price, p.Description, p.AvailableQuantity, p.Id)
 
 	if err != nil {
-		log.Println("failed to update product: ", err)
+		slog.Error("failed to update product", err, slog.Any("product", p))
 		return
 	}
 

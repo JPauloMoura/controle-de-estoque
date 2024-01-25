@@ -2,18 +2,22 @@ package main
 
 import (
 	"log"
+	"log/slog"
 	"net/http"
 
+	"github.com/14-web_api/pkg/loggers"
 	"github.com/14-web_api/routes"
 	"github.com/joho/godotenv"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	if err := godotenv.Load(); err != nil {
+		log.Panic("failed to loading .env file")
 	}
+
+	loggers.ConfigLogger()
 	routes.Handler()
-	log.Println("Servidor rodando na porta 3002...")
+
+	slog.Info("server is running in port 3002...")
 	http.ListenAndServe(":3002", nil)
 }

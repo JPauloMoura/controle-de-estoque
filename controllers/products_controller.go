@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"html/template"
-	"log"
+	"log/slog"
 	"net/http"
 	"strconv"
 
@@ -21,15 +21,17 @@ func HandlerForm(w http.ResponseWriter, r *http.Request) {
 }
 
 func InsertProduct(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
+	if r.Method == http.MethodPost {
 		priceFloat, err := strconv.ParseFloat(r.FormValue("price"), 64)
 		if err != nil {
-			log.Println("InsertProduct: conversão de preço", err)
+			slog.Error("failed to convert product price", err)
+			return
 		}
 
 		availableQuantityInt, err := strconv.Atoi(r.FormValue("availableQuantity"))
 		if err != nil {
-			log.Println("InsertProduct: conversão de availableQuantity", err)
+			slog.Error("failed to convert product availableQuantity", err)
+			return
 		}
 
 		p := models.Product{
@@ -40,6 +42,11 @@ func InsertProduct(w http.ResponseWriter, r *http.Request) {
 		}
 
 		models.InsertProduct(p)
+	} else {
+		slog.Warn("invalid method",
+			slog.String("aceppted", http.MethodPost),
+			slog.String("received", r.Method),
+		)
 	}
 
 	http.Redirect(w, r, "/", 301)
@@ -51,7 +58,6 @@ func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	models.DeleteProduct(productID)
 
 	http.Redirect(w, r, "/", 301)
-
 }
 
 func EditProduct(w http.ResponseWriter, r *http.Request) {
@@ -61,20 +67,23 @@ func EditProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateProduct(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
+	if r.Method == http.MethodPatch {
 		idInt, err := strconv.Atoi(r.FormValue("id"))
 		if err != nil {
-			log.Println("UpdateProduct id:", err.Error())
+			slog.Error("failed to convert product id to int", err)
+			return
 		}
 
 		priceFloat, err := strconv.ParseFloat(r.FormValue("price"), 64)
 		if err != nil {
-			log.Println("UpdateProduct price:", err.Error())
+			slog.Error("failed to convert product price", err)
+			return
 		}
 
 		availableQuantityInt, err := strconv.Atoi(r.FormValue("availableQuantity"))
 		if err != nil {
-			log.Println("UpdateProduct availableQuantity:", err.Error())
+			slog.Error("failed to convert product availableQuantity", err)
+			return
 		}
 
 		p := models.Product{
@@ -86,6 +95,11 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		}
 
 		models.UpdateProduct(p)
+	} else {
+		slog.Warn("invalid method",
+			slog.String("aceppted", http.MethodPatch),
+			slog.String("received", r.Method),
+		)
 	}
 	http.Redirect(w, r, "/", 301)
 }
