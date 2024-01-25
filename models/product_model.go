@@ -79,12 +79,20 @@ func DeleteProduct(id string) {
 		return
 	}
 
-	_, err = query.Exec(id)
+	uid, err := strconv.Atoi(id)
+	if err != nil {
+		log.Println("failed to delete product, id is not valid: ", err)
+		return
+	}
+
+	_, err = query.Exec(uid)
 
 	if err != nil {
 		log.Println("failed to delete product: ", err)
 		return
 	}
+
+	log.Println("product deleted! id ", uid)
 }
 
 func GetProduct(id string) Product {
