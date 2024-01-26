@@ -61,7 +61,7 @@ function onDelete(productId) {
     }
     
     const requestOptionsDeleteProduct = {method: "DELETE", headers: {'Content-Type': 'application/json'}}
-    const url = `a/delete?id=${productId}`
+    const url = `/delete?id=${productId}`
 
     doRequest(url,requestOptionsDeleteProduct)
 }

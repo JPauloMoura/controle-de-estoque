@@ -10,7 +10,8 @@
                     <p class="lead">Altere as informações desse produto</p>
                 </div>
             </div>
-            <form method="PATCH" action="update">
+            <!-- The only valid values for the method attribute are GET and POST. PUTCH is no supported -->
+            <form method="POST" action="update">
                 <input type="hidden" name="id" value={{.Id}}>
                 <div class="row">
                     <div class="col-sm-8">
