@@ -1,32 +1,37 @@
-package models
+package repository
 
 import (
+	"database/sql"
 	"log/slog"
 	"strconv"
 
-	"github.com/14-web_api/data"
+	"github.com/14-web_api/services/product/entity"
 )
 
-// Products is the representation of a product entity available for sale
-type Product struct {
-	Id                int
-	Name              string
-	Price             float64
-	Description       string
-	AvailableQuantity int
+type ProductRepository interface {
+	GetAllProducts() []entity.Product
+	InsertProduct(p entity.Product)
+	DeleteProduct(id string)
+	GetProduct(id string) entity.Product
+	UpdateProduct(p entity.Product)
 }
 
-func GetAllProducts() []Product {
-	db := data.ConnectDb()
-	defer db.Close()
+func NewProductRepository(db *sql.DB) ProductRepository {
+	return repository{db: db}
+}
 
-	query, err := db.Query("SELECT * FROM products ORDER BY name ASC")
+type repository struct {
+	db *sql.DB
+}
+
+func (r repository) GetAllProducts() []entity.Product {
+	query, err := r.db.Query("SELECT * FROM products ORDER BY name ASC")
 	if err != nil {
 		slog.Error("failed to get products: ", err)
-		return []Product{}
+		return []entity.Product{}
 	}
 
-	listProduct := []Product{}
+	listProduct := []entity.Product{}
 
 	for query.Next() {
 		var id, availableQuantity int
@@ -37,21 +42,19 @@ func GetAllProducts() []Product {
 		err := query.Scan(&id, &name, &price, &description, &availableQuantity)
 		if err != nil {
 			slog.Error("failed to scan products: ", err)
-			return []Product{}
+			return []entity.Product{}
 		}
 
-		p := Product{id, name, float64(price), description, int(availableQuantity)}
+		p := entity.Product{Id: id, Name: name, Price: price, Description: description, AvailableQuantity: availableQuantity}
 
 		listProduct = append(listProduct, p)
 	}
+
 	return listProduct
 }
 
-func InsertProduct(p Product) {
-	db := data.ConnectDb()
-	defer db.Close()
-
-	queryInsert, err := db.Prepare(`
+func (r repository) InsertProduct(p entity.Product) {
+	queryInsert, err := r.db.Prepare(`
 		insert into products(name, description, price, available_quantity)
 		values($1, $2, $3, $4)
 	`)
@@ -67,13 +70,11 @@ func InsertProduct(p Product) {
 		return
 	}
 
+	slog.Debug("product created", slog.String("name", p.Name))
 }
 
-func DeleteProduct(id string) {
-	db := data.ConnectDb()
-	defer db.Close()
-
-	query, err := db.Prepare(`
+func (r repository) DeleteProduct(id string) {
+	query, err := r.db.Prepare(`
 		DELETE FROM products WHERE id=$1
 	`)
 	if err != nil {
@@ -97,41 +98,36 @@ func DeleteProduct(id string) {
 	slog.Debug("product deleted", slog.Int("productId", uid))
 }
 
-func GetProduct(id string) Product {
-	db := data.ConnectDb()
-	defer db.Close()
-
+func (r repository) GetProduct(id string) entity.Product {
 	productId, err := strconv.Atoi(id)
 	if err != nil {
 		slog.Error("failed to convert string id to integer", err)
-		return Product{}
+		return entity.Product{}
 	}
 
-	query, err := db.Query(`SELECT * FROM products WHERE id=$1`, productId)
+	query, err := r.db.Query(`SELECT * FROM products WHERE id=$1`, productId)
 	if err != nil {
 		slog.Error("failed to get product by id", err, slog.Int("productId", productId))
-		return Product{}
+		return entity.Product{}
 	}
 
-	p := Product{}
+	p := entity.Product{}
 
 	for query.Next() {
 		// its parameters must be in the same order as the entity fields
 		err := query.Scan(&p.Id, &p.Name, &p.Price, &p.Description, &p.AvailableQuantity)
 		if err != nil {
 			slog.Error("failed to scan when get product by id", err, slog.Int("productId", productId))
-			return Product{}
+			return entity.Product{}
 		}
 	}
 
+	slog.Debug("product found", slog.Int("productId", p.Id))
 	return p
 }
 
-func UpdateProduct(p Product) {
-	db := data.ConnectDb()
-	defer db.Close()
-
-	query, err := db.Prepare(`
+func (r repository) UpdateProduct(p entity.Product) {
+	query, err := r.db.Prepare(`
 		UPDATE products SET 
 		name=$1, price=$2, description=$3, available_quantity=$4
 		WHERE id=$5
@@ -148,4 +144,5 @@ func UpdateProduct(p Product) {
 		return
 	}
 
+	slog.Debug("product updated", slog.Int("productId", p.Id))
 }

@@ -6,9 +6,9 @@ run:
 	@echo "==> running infrastructure with docker"
 	@docker-compose up
 
-run-app:
-	@echo "==> running app"
-	@go run main.go
+run-webserver:
+	@echo "==> running webserver..."
+	@go run ./cmd/webserver/main.go
 
 kill-containers:
 	@docker stop $$(docker ps -aq) && docker rm $$(docker ps -aq)
