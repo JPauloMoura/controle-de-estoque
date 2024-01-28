@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/JPauloMoura/controle-de-estoque/domain/entity"
+	"github.com/go-chi/chi/v5"
 )
 
 func (h handlerProduct) UpdateProduct(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +23,7 @@ func (h handlerProduct) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	productID, err := strconv.Atoi(r.URL.Query().Get("id"))
+	productID, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		slog.Error("failed to convert product id", err)
 		w.WriteHeader(http.StatusBadRequest)

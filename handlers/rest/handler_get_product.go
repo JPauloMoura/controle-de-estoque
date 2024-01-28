@@ -5,10 +5,12 @@ import (
 	"errors"
 	"log/slog"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
 )
 
 func (h handlerProduct) GetProduct(w http.ResponseWriter, r *http.Request) {
-	productID := r.URL.Query().Get("id")
+	productID := chi.URLParam(r, "id")
 	if productID == "" {
 		slog.Warn("field id is required")
 

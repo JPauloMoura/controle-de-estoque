@@ -4,16 +4,25 @@ import (
 	"net/http"
 
 	"github.com/JPauloMoura/controle-de-estoque/domain/services/product"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
-func Handler(svc product.ProductService) {
+func Handler(svc product.ProductService) *chi.Mux {
 	h := newHandlerProduct(svc)
+	router := chi.NewRouter()
 
-	http.HandleFunc("/products/create", h.CreateProduct)
-	http.HandleFunc("/products/update", h.UpdateProduct)
-	http.HandleFunc("/products", h.ListProducts)
-	http.HandleFunc("/products/find", h.GetProduct)
-	http.HandleFunc("/products/delete", h.DeleteProduct)
+	router.Use(middleware.Logger)
+	router.Use(middleware.Recoverer)
+	router.Use(middleware.RequestID)
+
+	router.Get("/products", h.ListProducts)
+	router.Get("/products/{id}", h.GetProduct)
+	router.Post("/products", h.CreateProduct)
+	router.Put("/products/{id}", h.UpdateProduct)
+	router.Delete("/products/{id}", h.DeleteProduct)
+
+	return router
 }
 
 type HandlerProduct interface {
