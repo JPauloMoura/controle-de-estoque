@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"strconv"
 
-	"github.com/14-web_api/services/product/entity"
+	"github.com/14-web_api/domain/entity"
 )
 
 type ProductRepository interface {

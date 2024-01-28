@@ -8,7 +8,7 @@ run:
 
 run-webserver:
 	@echo "==> running webserver..."
-	@go run ./cmd/webserver/main.go
+	@go run ./cmd/main.go
 
 kill-containers:
 	@docker stop $$(docker ps -aq) && docker rm $$(docker ps -aq)
