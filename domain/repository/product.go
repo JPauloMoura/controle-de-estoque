@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"strconv"
 
-	"github.com/14-web_api/domain/entity"
+	"github.com/JPauloMoura/controle-de-estoque/domain/entity"
 )
 
 type ProductRepository interface {

@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"text/template"
 
-	"github.com/14-web_api/domain/entity"
-	"github.com/14-web_api/domain/services/product"
+	"github.com/JPauloMoura/controle-de-estoque/domain/entity"
+	"github.com/JPauloMoura/controle-de-estoque/domain/services/product"
 )
 
 type HandlerProduct interface {

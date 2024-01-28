@@ -5,11 +5,11 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/14-web_api/domain/repository"
-	"github.com/14-web_api/domain/services/product"
-	"github.com/14-web_api/handlers/webserver"
-	"github.com/14-web_api/infrastructure"
-	"github.com/14-web_api/pkg/loggers"
+	"github.com/JPauloMoura/controle-de-estoque/domain/repository"
+	"github.com/JPauloMoura/controle-de-estoque/domain/services/product"
+	"github.com/JPauloMoura/controle-de-estoque/handlers/webserver"
+	"github.com/JPauloMoura/controle-de-estoque/infrastructure"
+	"github.com/JPauloMoura/controle-de-estoque/pkg/loggers"
 	"github.com/joho/godotenv"
 )
 

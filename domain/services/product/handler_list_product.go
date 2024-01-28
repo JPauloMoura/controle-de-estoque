@@ -1,7 +1,7 @@
 package product
 
 import (
-	"github.com/14-web_api/domain/entity"
+	"github.com/JPauloMoura/controle-de-estoque/domain/entity"
 )
 
 func (p productService) ListProducts() ([]entity.Product, error) {
