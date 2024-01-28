@@ -7,6 +7,7 @@ import (
 
 	"github.com/JPauloMoura/controle-de-estoque/domain/repository"
 	"github.com/JPauloMoura/controle-de-estoque/domain/services/product"
+	"github.com/JPauloMoura/controle-de-estoque/handlers/rest"
 	"github.com/JPauloMoura/controle-de-estoque/handlers/webserver"
 	"github.com/JPauloMoura/controle-de-estoque/infrastructure"
 	"github.com/JPauloMoura/controle-de-estoque/pkg/loggers"
@@ -29,13 +30,7 @@ func buildDependencies() {
 	repo := repository.NewProductRepository(infrastructure.ConnectDb())
 	svcProduct := product.NewProductService(repo)
 
-	webserver.Handler(
-		webserver.NewHandlerProduct(svcProduct),
-	)
+	webserver.Handler(webserver.NewHandlerProduct(svcProduct))
 
-	// rest
-	// handlers.HandlerRest(product.NewProductService(
-	// 	repo,
-	// 	rest.NewRestPresenter(),
-	// ))
+	rest.Handler(svcProduct)
 }
