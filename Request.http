@@ -1,0 +1,32 @@
+### Create product
+POST http://localhost:3002/products/create HTTP/1.1
+content-type: application/json
+
+{
+    "name": "sample",
+    "price": 12,
+    "description": "bla",
+    "availableQuantity":2
+}
+
+### Update product
+PUT  http://localhost:3002/products/update?id=17 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "salsicha",
+    "price": 1,
+    "description": "ela é amarela e boa",
+    "availableQuantity": 12
+}
+
+### Delete products
+DELETE  http://localhost:3002/products/delete?id=18 HTTP/1.1
+
+### Get product
+GET http://localhost:3002/products/find?id=15 HTTP/1.1
+
+### List products
+GET http://localhost:3002/products HTTP/1.1
+
+###
