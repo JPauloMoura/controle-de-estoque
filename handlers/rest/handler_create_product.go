@@ -23,16 +23,21 @@ func (h handlerProduct) CreateProduct(w http.ResponseWriter, r *http.Request) {
 
 	var product entity.Product
 
-	err := json.NewDecoder(r.Body).Decode(&product)
-	if err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&product); err != nil {
 		slog.Error("failed to decode body", err)
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(err)
 		return
 	}
 
-	err = h.svcProduct.CreateProduct(product)
-	if err != nil {
+	if err := product.Validate(); err != nil {
+		slog.Error("failed to validate product", err)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err)
+		return
+	}
+
+	if err := h.svcProduct.CreateProduct(product); err != nil {
 		slog.Error("failed to create product", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(errors.New("internal server error"))
