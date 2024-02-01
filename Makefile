@@ -14,6 +14,10 @@ run-api:
 	@echo "==> running api..."
 	@go run ./cmd/rest/main.go
 
+run-api-with-air:
+	@echo "==> running api..."
+	@air
+
 kill-containers:
 	@docker stop $$(docker ps -aq) && docker rm $$(docker ps -aq)
 
