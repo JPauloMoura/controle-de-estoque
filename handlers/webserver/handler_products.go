@@ -10,6 +10,7 @@ import (
 
 	"github.com/JPauloMoura/controle-de-estoque/domain/entity"
 	"github.com/JPauloMoura/controle-de-estoque/domain/services/product"
+	e "github.com/JPauloMoura/controle-de-estoque/pkg/errors"
 )
 
 type HandlerProduct interface {
@@ -87,7 +88,7 @@ func (h handlerProduct) CreateProduct(w http.ResponseWriter, r *http.Request) {
 		AvailableQuantity: availableQuantityInt,
 	}
 
-	err = h.svcProduct.CreateProduct(product)
+	_, err = h.svcProduct.CreateProduct(product)
 	if err != nil {
 		slog.Error("failed to create product", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -99,20 +100,19 @@ func (h handlerProduct) CreateProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h handlerProduct) DeleteProduct(w http.ResponseWriter, r *http.Request) {
-	productID := r.URL.Query().Get("id")
-	if productID == "" {
-		slog.Warn("field id is required")
-
+	productID, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil {
+		slog.Error("failed to convert product id", err)
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(errors.New("invalid id"))
+		json.NewEncoder(w).Encode(e.ErrorInvalidId)
 		return
 	}
 
-	err := h.svcProduct.DeleteProduct(productID)
+	err = h.svcProduct.DeleteProduct(productID)
 	if err != nil {
 		slog.Error("failed to delete product", err)
 		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(errors.New("internal server error"))
+		json.NewEncoder(w).Encode(err)
 		return
 	}
 
@@ -170,22 +170,19 @@ func (h handlerProduct) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h handlerProduct) RenderPageEditeProduct(w http.ResponseWriter, r *http.Request) {
-	productID := r.URL.Query().Get("id")
-	if productID == "" {
-		slog.Warn("field id is required")
-
+	productID, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil {
+		slog.Error("failed to convert product id", err)
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(errors.New("invalid id"))
+		json.NewEncoder(w).Encode(e.ErrorInvalidId)
 		return
 	}
-
-	h.svcProduct.GetProduct(productID)
 
 	product, err := h.svcProduct.GetProduct(productID)
 	if err != nil {
 		slog.Error("failed to get product", err)
 		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(errors.New("internal server error"))
+		json.NewEncoder(w).Encode(err)
 		return
 	}
 

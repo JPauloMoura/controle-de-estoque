@@ -36,7 +36,8 @@ func (h handlerProduct) CreateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.svcProduct.CreateProduct(product); err != nil {
+	_, err := h.svcProduct.CreateProduct(product)
+	if err != nil {
 		slog.Error("failed to create product", err)
 		response.Encode(w, err, http.StatusInternalServerError)
 		return

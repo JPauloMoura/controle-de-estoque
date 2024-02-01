@@ -7,9 +7,9 @@ import (
 
 type ProductService interface {
 	ListProducts() ([]entity.Product, error)
-	CreateProduct(entity.Product) error
-	DeleteProduct(productID string) error
-	GetProduct(productID string) (entity.Product, error)
+	CreateProduct(entity.Product) (*entity.Product, error)
+	DeleteProduct(productID int) error
+	GetProduct(productID int) (*entity.Product, error)
 	UpdateProduct(product entity.Product) error
 }
 

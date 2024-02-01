@@ -3,6 +3,7 @@ package rest
 import (
 	"log/slog"
 	"net/http"
+	"strconv"
 
 	e "github.com/JPauloMoura/controle-de-estoque/pkg/errors"
 	"github.com/JPauloMoura/controle-de-estoque/pkg/response"
@@ -10,9 +11,9 @@ import (
 )
 
 func (h handlerProduct) GetProduct(w http.ResponseWriter, r *http.Request) {
-	productID := chi.URLParam(r, "id")
-	if productID == "" {
-		slog.Warn("field id is required")
+	productID, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		slog.Error("failed to convert product id", err)
 		response.Encode(w, e.ErrorInvalidId, http.StatusBadRequest)
 		return
 	}

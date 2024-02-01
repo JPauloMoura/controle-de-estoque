@@ -10,7 +10,7 @@ import (
 func (h handlerProduct) ListProducts(w http.ResponseWriter, r *http.Request) {
 	products, err := h.svcProduct.ListProducts()
 	if err != nil {
-		slog.Error("failed to list products")
+		slog.Error("failed to list products", err)
 		response.Encode(w, err, http.StatusInternalServerError)
 		return
 	}

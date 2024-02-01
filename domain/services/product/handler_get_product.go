@@ -1,8 +1,17 @@
 package product
 
-import "github.com/JPauloMoura/controle-de-estoque/domain/entity"
+import (
+	"log/slog"
 
-func (p productService) GetProduct(productID string) (entity.Product, error) {
-	product := p.database.GetProduct(productID)
+	"github.com/JPauloMoura/controle-de-estoque/domain/entity"
+)
+
+func (p productService) GetProduct(productID int) (*entity.Product, error) {
+	product, err := p.database.GetProduct(productID)
+	if err != nil {
+		slog.Error("failed to get product", err)
+		return nil, err
+	}
+
 	return product, nil
 }
