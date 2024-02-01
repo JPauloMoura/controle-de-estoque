@@ -1,20 +1,19 @@
 package rest
 
 import (
-	"encoding/json"
 	"log/slog"
 	"net/http"
+
+	"github.com/JPauloMoura/controle-de-estoque/pkg/response"
 )
 
 func (h handlerProduct) ListProducts(w http.ResponseWriter, r *http.Request) {
 	products, err := h.svcProduct.ListProducts()
 	if err != nil {
 		slog.Error("failed to list products")
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(err)
+		response.Encode(w, err, http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(products)
+	response.Encode(w, products, http.StatusOK)
 }
