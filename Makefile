@@ -22,11 +22,11 @@ kill-containers:
 	@docker stop $$(docker ps -aq) && docker rm $$(docker ps -aq)
 
 create-migration:
-	@migrate create -ext sql -dir data/migrations -seq create_products_table
+	@migrate create -ext sql -dir infrastructure/database/migrations -seq create_products_table
 
 migrations-up: env
-	@migrate -path data/migrations -database $(CONNECTION) -verbose up
+	@migrate -path infrastructure/database/migrations -database $(CONNECTION) -verbose up
 
 migrations-down: env
-	@migrate -path data/migrations -database $(CONNECTION) -verbose down
+	@migrate -path infrastructure/database/migrations -database $(CONNECTION) -verbose down
 
