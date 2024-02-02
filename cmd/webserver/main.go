@@ -5,10 +5,10 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/JPauloMoura/controle-de-estoque/domain/repository"
-	"github.com/JPauloMoura/controle-de-estoque/domain/services/product"
-	"github.com/JPauloMoura/controle-de-estoque/handlers/webserver"
-	"github.com/JPauloMoura/controle-de-estoque/infrastructure"
+	"github.com/JPauloMoura/controle-de-estoque/infrastructure/database"
+	"github.com/JPauloMoura/controle-de-estoque/internal/product/handlers/webserver"
+	"github.com/JPauloMoura/controle-de-estoque/internal/product/repository"
+	"github.com/JPauloMoura/controle-de-estoque/internal/product/services/product"
 	"github.com/JPauloMoura/controle-de-estoque/pkg/loggers"
 	"github.com/joho/godotenv"
 )
@@ -26,7 +26,7 @@ func main() {
 }
 
 func buildDependencies() {
-	repo := repository.NewProductRepository(infrastructure.ConnectDb())
+	repo := repository.NewProductRepository(database.ConnectDb())
 	svcProduct := product.NewProductService(repo)
 	webserver.Handler(webserver.NewHandlerProduct(svcProduct))
 }

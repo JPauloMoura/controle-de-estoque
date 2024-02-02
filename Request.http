@@ -10,7 +10,7 @@ content-type: application/json
 }
 
 ### Update product
-PUT  http://localhost:3002/products/17 HTTP/1.1
+PUT  http://localhost:3002/products/32 HTTP/1.1
 content-type: application/json
 
 {
@@ -21,7 +21,7 @@ content-type: application/json
 }
 
 ### Delete products
-DELETE  http://localhost:3002/products/19 HTTP/1.1
+DELETE  http://localhost:3002/products/299 HTTP/1.1
 
 ### Get product
 GET http://localhost:3002/products/19 HTTP/1.1

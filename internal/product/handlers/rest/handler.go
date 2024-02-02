@@ -3,7 +3,7 @@ package rest
 import (
 	"net/http"
 
-	"github.com/JPauloMoura/controle-de-estoque/domain/services/product"
+	"github.com/JPauloMoura/controle-de-estoque/internal/product/services/product"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )

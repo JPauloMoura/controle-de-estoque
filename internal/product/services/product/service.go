@@ -1,8 +1,8 @@
 package product
 
 import (
-	"github.com/JPauloMoura/controle-de-estoque/domain/entity"
-	"github.com/JPauloMoura/controle-de-estoque/domain/repository"
+	"github.com/JPauloMoura/controle-de-estoque/internal/product/entity"
+	"github.com/JPauloMoura/controle-de-estoque/internal/product/repository"
 )
 
 type ProductService interface {

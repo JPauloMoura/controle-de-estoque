@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/JPauloMoura/controle-de-estoque/domain/entity"
+	"github.com/JPauloMoura/controle-de-estoque/internal/product/entity"
 	e "github.com/JPauloMoura/controle-de-estoque/pkg/errors"
 	"github.com/JPauloMoura/controle-de-estoque/pkg/response"
 	"github.com/go-chi/chi/v5"

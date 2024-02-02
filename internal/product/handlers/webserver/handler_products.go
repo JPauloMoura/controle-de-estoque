@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"text/template"
 
-	"github.com/JPauloMoura/controle-de-estoque/domain/entity"
-	"github.com/JPauloMoura/controle-de-estoque/domain/services/product"
+	"github.com/JPauloMoura/controle-de-estoque/internal/product/entity"
+	"github.com/JPauloMoura/controle-de-estoque/internal/product/services/product"
 	e "github.com/JPauloMoura/controle-de-estoque/pkg/errors"
 )
 

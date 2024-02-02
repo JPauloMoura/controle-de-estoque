@@ -3,7 +3,7 @@ package product
 import (
 	"log/slog"
 
-	"github.com/JPauloMoura/controle-de-estoque/domain/entity"
+	"github.com/JPauloMoura/controle-de-estoque/internal/product/entity"
 )
 
 func (p productService) CreateProduct(product entity.Product) (*entity.Product, error) {

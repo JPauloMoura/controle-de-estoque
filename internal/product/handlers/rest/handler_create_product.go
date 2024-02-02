@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/JPauloMoura/controle-de-estoque/domain/entity"
+	"github.com/JPauloMoura/controle-de-estoque/internal/product/entity"
 	e "github.com/JPauloMoura/controle-de-estoque/pkg/errors"
 	"github.com/JPauloMoura/controle-de-estoque/pkg/response"
 )

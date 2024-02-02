@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"log/slog"
 
-	"github.com/JPauloMoura/controle-de-estoque/domain/entity"
+	"github.com/JPauloMoura/controle-de-estoque/internal/product/entity"
 	e "github.com/JPauloMoura/controle-de-estoque/pkg/errors"
 )
 

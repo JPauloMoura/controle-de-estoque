@@ -5,10 +5,10 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/JPauloMoura/controle-de-estoque/domain/repository"
-	"github.com/JPauloMoura/controle-de-estoque/domain/services/product"
-	"github.com/JPauloMoura/controle-de-estoque/handlers/rest"
-	"github.com/JPauloMoura/controle-de-estoque/infrastructure"
+	"github.com/JPauloMoura/controle-de-estoque/infrastructure/database"
+	"github.com/JPauloMoura/controle-de-estoque/internal/product/handlers/rest"
+	"github.com/JPauloMoura/controle-de-estoque/internal/product/repository"
+	"github.com/JPauloMoura/controle-de-estoque/internal/product/services/product"
 	"github.com/JPauloMoura/controle-de-estoque/pkg/loggers"
 	"github.com/go-chi/chi/v5"
 	"github.com/joho/godotenv"
@@ -27,7 +27,7 @@ func main() {
 }
 
 func buildApp() *chi.Mux {
-	repo := repository.NewProductRepository(infrastructure.ConnectDb())
+	repo := repository.NewProductRepository(database.ConnectDb())
 	svcProduct := product.NewProductService(repo)
 	router := rest.Handler(svcProduct)
 
