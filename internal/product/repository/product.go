@@ -104,13 +104,14 @@ func (r repository) GetProduct(id int) (*entity.Product, error) {
 
 	var p entity.Product
 
-	for items.Next() {
-		// its parameters must be in the same order as the entity fields
-		err := items.Scan(&p.Id, &p.Name, &p.Price, &p.Description, &p.AvailableQuantity)
-		if err != nil {
-			slog.Error("failed to scan when get product by id", err, slog.Int("productId", id))
-			return nil, e.ErrorUnableToScanProduct
-		}
+	if !items.Next() {
+		return nil, e.ErrorProductNotFound
+	}
+
+	// its parameters must be in the same order as the entity fields
+	if err := items.Scan(&p.Id, &p.Name, &p.Price, &p.Description, &p.AvailableQuantity); err != nil {
+		slog.Error("failed to scan when get product by id", err, slog.Int("productId", id))
+		return nil, e.ErrorUnableToScanProduct
 	}
 
 	return &p, nil
