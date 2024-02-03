@@ -15,4 +15,5 @@ var (
 	ErrorQueryToInsertProductIsInvalid = errors.New("query to insert product is invalid")
 	ErrorQueryToDeleteProductIsInvalid = errors.New("query to delete product is invalid")
 	ErrorQueryToUpdateProductIsInvalid = errors.New("query to update product is invalid")
+	ErrorProductNotFound               = errors.New("product not found")
 )
