@@ -2,6 +2,10 @@ include .env
 env:
     export CONNECTION=$(POSTGRESQL_URL)
 
+test:
+	@echo "==> running tests"
+	@go test -v ./...
+
 run:
 	@echo "==> running infrastructure with docker"
 	@docker-compose up
