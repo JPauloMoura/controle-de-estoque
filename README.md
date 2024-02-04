@@ -1,5 +1,6 @@
 # Controle de estoque 🚀
 ![Static Badge](https://img.shields.io/badge/Em_Constru%C3%A7%C3%A3o-blue)
+[![go](https://github.com/JPauloMoura/controle-de-estoque/actions/workflows/go.yml/badge.svg)](https://github.com/JPauloMoura/controle-de-estoque/actions/workflows/go.yml)
 
 ![GitHub issues](https://img.shields.io/github/issues/seu-usuario/seu-repositorio.svg)
 ![GitHub forks](https://img.shields.io/github/forks/seu-usuario/seu-repositorio.svg)
