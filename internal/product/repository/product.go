@@ -9,7 +9,7 @@ import (
 )
 
 type ProductRepository interface {
-	GetAllProducts() ([]entity.Product, error)
+	GetAllProducts(pagination *Pagination) ([]entity.Product, error)
 	InsertProduct(p entity.Product) (*entity.Product, error)
 	DeleteProduct(id int) error
 	GetProduct(id int) (*entity.Product, error)
@@ -24,8 +24,8 @@ type repository struct {
 	db *sql.DB
 }
 
-func (r repository) GetAllProducts() ([]entity.Product, error) {
-	items, err := r.db.Query("SELECT * FROM products ORDER BY name ASC")
+func (r repository) GetAllProducts(pagination *Pagination) ([]entity.Product, error) {
+	items, err := r.db.Query(pagination.Query())
 	if err != nil {
 		slog.Error("failed to get products: ", err)
 		return nil, e.ErrorUnableToListProducts

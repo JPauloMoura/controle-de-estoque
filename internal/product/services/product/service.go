@@ -6,7 +6,7 @@ import (
 )
 
 type ProductService interface {
-	ListProducts() ([]entity.Product, error)
+	ListProducts(pagination *repository.Pagination) ([]entity.Product, error)
 	CreateProduct(entity.Product) (*entity.Product, error)
 	DeleteProduct(productID int) error
 	GetProduct(productID int) (*entity.Product, error)

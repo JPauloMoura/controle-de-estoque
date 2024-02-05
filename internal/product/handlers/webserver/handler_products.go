@@ -37,7 +37,7 @@ type handlerProduct struct {
 }
 
 func (h handlerProduct) ListProducts(w http.ResponseWriter, r *http.Request) {
-	products, err := h.svcProduct.ListProducts()
+	products, err := h.svcProduct.ListProducts(nil)
 	if err != nil {
 		slog.Error("failed to list products")
 		return
