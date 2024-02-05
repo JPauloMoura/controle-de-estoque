@@ -3,11 +3,11 @@ package entity
 import "errors"
 
 type Product struct {
-	Id                int
-	Name              string
-	Price             float64
-	Description       string
-	AvailableQuantity int
+	Id                int     `json:"id"`
+	Name              string  `json:"name"`
+	Price             float64 `json:"price"`
+	Description       string  `json:"description"`
+	AvailableQuantity int     `json:"availableQuantity"`
 }
 
 func (p Product) Validate() error {
