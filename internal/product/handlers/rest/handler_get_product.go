@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"errors"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -19,6 +20,12 @@ func (h handlerProduct) GetProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	product, err := h.svcProduct.GetProduct(productID)
+	if errors.Is(err, e.ErrorProductNotFound) {
+		slog.Warn("failed to get product", err)
+		response.Encode(w, err, http.StatusNotFound)
+		return
+	}
+
 	if err != nil {
 		slog.Error("failed to get product", err)
 		response.Encode(w, err, http.StatusInternalServerError)
