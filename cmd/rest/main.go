@@ -14,6 +14,7 @@ import (
 	"github.com/JPauloMoura/controle-de-estoque/pkg/auth"
 	"github.com/JPauloMoura/controle-de-estoque/pkg/configs"
 	"github.com/JPauloMoura/controle-de-estoque/pkg/loggers"
+	"github.com/JPauloMoura/controle-de-estoque/pkg/middlewares"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
@@ -38,6 +39,7 @@ func buildHandlers(cfg *configs.Config) *chi.Mux {
 	router.Use(middleware.Logger)
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.RequestID)
+	router.Use(middlewares.Cors())
 
 	db := database.ConnectDb(cfg)
 	productRepository := repository.NewProductRepository(db)
