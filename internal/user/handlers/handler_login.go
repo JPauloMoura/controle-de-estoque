@@ -2,12 +2,10 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"log/slog"
 	"net/http"
 
 	"github.com/JPauloMoura/controle-de-estoque/internal/user/entity"
-	"github.com/JPauloMoura/controle-de-estoque/pkg/auth"
 	"github.com/JPauloMoura/controle-de-estoque/pkg/response"
 )
 
@@ -33,7 +31,6 @@ func (h handlerUser) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("==> autorizado!")
-	token := auth.NewToken(user.Email)
+	token := h.authorization.CreateToken(user.Email)
 	response.Encode(w, token, http.StatusAccepted)
 }

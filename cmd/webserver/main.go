@@ -9,6 +9,7 @@ import (
 	"github.com/JPauloMoura/controle-de-estoque/internal/product/handlers/webserver"
 	"github.com/JPauloMoura/controle-de-estoque/internal/product/repository"
 	"github.com/JPauloMoura/controle-de-estoque/internal/product/services/product"
+	"github.com/JPauloMoura/controle-de-estoque/pkg/configs"
 	"github.com/JPauloMoura/controle-de-estoque/pkg/loggers"
 	"github.com/joho/godotenv"
 )
@@ -26,7 +27,7 @@ func main() {
 }
 
 func buildDependencies() {
-	repo := repository.NewProductRepository(database.ConnectDb())
+	repo := repository.NewProductRepository(database.ConnectDb(configs.BuildConfig()))
 	svcProduct := product.NewProductService(repo)
 	webserver.Handler(webserver.NewHandlerProduct(svcProduct))
 }

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/JPauloMoura/controle-de-estoque/internal/user/repository"
+	"github.com/JPauloMoura/controle-de-estoque/pkg/auth"
 )
 
 type HandlerUser interface {
@@ -12,11 +13,13 @@ type HandlerUser interface {
 }
 
 type handlerUser struct {
-	repo repository.UserRepository
+	repo          repository.UserRepository
+	authorization auth.JwtAuth
 }
 
-func NewHandlerUser(repo repository.UserRepository) HandlerUser {
+func NewHandlerUser(repo repository.UserRepository, jwtAuth auth.JwtAuth) HandlerUser {
 	return handlerUser{
-		repo: repo,
+		repo:          repo,
+		authorization: jwtAuth,
 	}
 }

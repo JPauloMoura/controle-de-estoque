@@ -12,6 +12,7 @@ import (
 	userHandler "github.com/JPauloMoura/controle-de-estoque/internal/user/handlers"
 	userRepo "github.com/JPauloMoura/controle-de-estoque/internal/user/repository"
 	"github.com/JPauloMoura/controle-de-estoque/pkg/auth"
+	"github.com/JPauloMoura/controle-de-estoque/pkg/configs"
 	"github.com/JPauloMoura/controle-de-estoque/pkg/loggers"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -23,26 +24,29 @@ func main() {
 		log.Panic("failed to loading .env file")
 	}
 
-	loggers.ConfigLogger()
-	handlers := buildHandlers()
+	cfg := configs.BuildConfig()
 
-	slog.Info("server is running in port 3002...")
-	http.ListenAndServe(":3002", handlers)
+	loggers.ConfigLogger()
+	handlers := buildHandlers(cfg)
+
+	slog.Info("server is running in port " + cfg.ServerPort())
+	http.ListenAndServe(":"+cfg.ServerPort(), handlers)
 }
 
-func buildHandlers() *chi.Mux {
+func buildHandlers(cfg *configs.Config) *chi.Mux {
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.RequestID)
 
-	db := database.ConnectDb()
+	db := database.ConnectDb(cfg)
 	productRepository := repository.NewProductRepository(db)
 	userRepository := userRepo.NewUserRepository(db)
 	productService := product.NewProductService(productRepository)
+	authorization := auth.NewJwtAuth(cfg.JwtKey())
 
 	{ // user handlers
-		h := userHandler.NewHandlerUser(userRepository)
+		h := userHandler.NewHandlerUser(userRepository, authorization)
 		router.Post("/user", h.CreateUser)
 		router.Post("/user/login", h.Login)
 	}
@@ -50,7 +54,7 @@ func buildHandlers() *chi.Mux {
 	{ // product handlers
 		h := rest.NewHandlerProduct(productService)
 		router.Group(func(r chi.Router) {
-			r.Use(auth.MiddlewareAuth)
+			r.Use(authorization.MiddlewareAuth)
 
 			r.Get("/products", h.ListProducts)
 			r.Get("/products/{id}", h.GetProduct)
