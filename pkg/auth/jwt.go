@@ -4,23 +4,27 @@ import (
 	"errors"
 	"log/slog"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/JPauloMoura/controle-de-estoque/pkg/response"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var JWT_KEY string
+type JwtAuth interface {
+	CreateToken(email string) string
+	MiddlewareAuth(next http.Handler) http.Handler
+}
+type jwtAuth struct {
+	JwtKey string
+}
 
-func init() {
-	JWT_KEY = os.Getenv("JWT_KEY")
-	if JWT_KEY == "" {
-		panic("JWT_KEY is required")
+func NewJwtAuth(key string) JwtAuth {
+	return jwtAuth{
+		JwtKey: key,
 	}
 }
 
-func NewToken(email string) string {
+func (j jwtAuth) CreateToken(email string) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"iss": "login",
@@ -28,7 +32,7 @@ func NewToken(email string) string {
 			"exp": time.Now().Add(time.Minute * 5).Unix(),
 		})
 
-	strToken, err := token.SignedString([]byte(JWT_KEY))
+	strToken, err := token.SignedString([]byte(j.JwtKey))
 	if err != nil {
 		panic(err)
 	}
@@ -36,7 +40,7 @@ func NewToken(email string) string {
 	return "Bearer " + strToken
 }
 
-func MiddlewareAuth(next http.Handler) http.Handler {
+func (j jwtAuth) MiddlewareAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		lengthBearer := len("Bearer ")
 
@@ -47,7 +51,7 @@ func MiddlewareAuth(next http.Handler) http.Handler {
 			return
 		}
 
-		token, err := parseToken(bearerToken[lengthBearer:], JWT_KEY)
+		token, err := parseToken(bearerToken[lengthBearer:], j.JwtKey)
 		if err != nil || !token.Valid {
 			slog.Warn("failed to validate token", slog.String("error", err.Error()))
 			response.Encode(w, errors.New("invalid token"), http.StatusForbidden)
@@ -66,5 +70,4 @@ func parseToken(token string, key string) (*jwt.Token, error) {
 
 		return []byte(key), nil
 	})
-
 }
