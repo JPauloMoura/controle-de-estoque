@@ -50,13 +50,13 @@ O projeto não é apenas técnico; é uma jornada para aprender e se aprimorar. 
 - [x] Permitir paginação na listagem de produtos
 - [x] Refinar retornos de erros entre as camadas
 - [x] Estabelecer esteira básica de CI: build e testes
+- [x] Estabelecer política de CORS
 
 **Tarefas Pendentes:**
+- [ ] Desenvolver sistema de autenticação
 - [ ] Criar testes unitários
-- [ ] Estabelecer política de CORS
 - [ ] Implementar middleware para adicionar metadados e timeout no contexto
 - [ ] Dockerizar a aplicação
-- [ ] Desenvolver sistema de autenticação
 - [ ] Criar fluxo completo de CI: build, testes e deploy de imagem
 
 ## Contribuições
