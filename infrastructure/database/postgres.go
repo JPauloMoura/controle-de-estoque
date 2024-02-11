@@ -2,34 +2,31 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"log/slog"
-	"os"
 
+	"github.com/JPauloMoura/controle-de-estoque/pkg/configs"
 	_ "github.com/lib/pq"
 )
 
-func ConnectDb() *sql.DB {
-	connect, err := sql.Open("postgres", getConnectStr())
+func ConnectDb(cfg *configs.Config) *sql.DB {
+	connectionString := cfg.DbConnectionStr()
+
+	connect, err := sql.Open("postgres", connectionString)
 	if err != nil || connect == nil {
-		slog.Error("failed to open conection", err, slog.String("connectionString", getConnectStr()))
-		log.Fatal("down service")
+		slog.Debug("failed to open conection. check if the database is running or if the connection string is correct",
+			slog.Any("error", err),
+			slog.String("connectionString", connectionString),
+		)
+		log.Fatal("failed to open conection", err)
 	}
 
 	if err := connect.Ping(); err != nil {
-		slog.Error("failed to ping on database", err, slog.String("connectionString", getConnectStr()))
-		log.Fatal("down service")
+		slog.Debug("failed to ping on database. check if the database is running or if the connection string is correct",
+			slog.Any("error", err),
+			slog.String("connectionString", connectionString),
+		)
+		log.Fatal("failed to ping on database", err)
 	}
 	return connect
-}
-
-func getConnectStr() string {
-	DB_USER := os.Getenv("DB_USER")
-	DB_NAME := os.Getenv("DB_NAME")
-	DB_PASSWORD := os.Getenv("DB_PASSWORD")
-	DB_HOST := os.Getenv("DB_HOST")
-	DB_SSLMODE := os.Getenv("DB_SSLMODE")
-
-	return fmt.Sprintf("user=%s dbname=%s password=%s host=%s sslmode=%s", DB_USER, DB_NAME, DB_PASSWORD, DB_HOST, DB_SSLMODE)
 }
